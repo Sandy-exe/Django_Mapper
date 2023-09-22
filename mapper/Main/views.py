@@ -1,19 +1,21 @@
 from django.shortcuts import render
 import requests
+import folium
 from django.http import JsonResponse
+from .models import EWaste_facility
+
 # Create your views here.
-def index(request):
-    # def weather(request, city):
-    #     url = 'https://api-client.imei.org/api/dhru'
-    #     key ='KkODHlJq1PyI38BmCvDBW21qFRXrqQOh0aJx9sYJYtHpvdx9dhmIl76KLjyO'
-    #     url = 'http://api-client.imei.org/api/services?apikey={'+key+'}'.format(city)
-    #     response = requests.get(url)
-    #     data = response.json()
-    #     return JsonResponse(data)
-    key ='KkODHlJq1PyI38BmCvDBW21qFRXrqQOh0aJx9sYJYtHpvdx9dhmIl76KLjyO'
-    url1 = 'http://api-client.imei.org/api/submit?apikey={}&service_id={}&input={}'.format(key,17,356131100146516)
-    response = requests.get(url1)
-    print(response)
-    data = response.json()
-    print(data)
-    return render(request,'index.html')
+def Home(request):
+    return render(request,'home.html')
+def Leaderboard(request):
+    return render(request,'leaderboard.html')
+def Map(request):
+    stations = EWaste_facility.objects.all()
+    context = {}
+    m = folium.Map(location=[13.0827,80.2707], zoom_start=10)
+
+    for stattion in stations:
+        folium.Marker([stattion.latitude, stattion.longitude],popup=stattion.EWaste_facility_name).add_to(m)
+    
+    context = {'map': m._repr_html_()}
+    return render(request, 'map.html', context)
