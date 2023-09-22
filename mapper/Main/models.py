@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Product(models.Model):
-    make = models.CharField(max_length=100)
+    type = models.CharField(max_length=100)
+    make = models.CharField(max_length=120)
     model = models.CharField(max_length=100)
     price = models.IntegerField()
